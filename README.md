@@ -184,10 +184,7 @@ AI-Driven-Supply-Chain-Optimization
 
 # 📬 Contact
 
-**Ch Sanjana**
+****Pratham Hirolikar**
 
-📧 sanjanach78@gmail.com
+📧 prathamhirolikar7@gmail.com
 
-💼 LinkedIn: linkedin.com/in/ch-sanjana
-
-⭐ If you found this project useful, feel free to star the repository!
