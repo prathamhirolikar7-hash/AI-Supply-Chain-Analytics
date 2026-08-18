@@ -1,0 +1,3765 @@
+{
+  "name": "AI-Driven Supply Chain Optimization",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ],
+          "q": "subject: Daily Sales"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_order_line",
+          "mode": "list",
+          "cachedResultName": "fact_order_line"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $json.order_id }}",
+            "customer_id": "={{ $json.customer_id }}",
+            "order_placement_date": "={{ $json.order_placement_date.toDateTime(\"dd-MM-yyyy\") }}",
+            "product_id": "={{ $json.product_id }}",
+            "order_qty": "={{ $json.order_qty }}",
+            "agreed_delivery_date": "={{ $json.agreed_delivery_date }}",
+            "actual_delivery_date": "={{ $json.actual_delivery_date }}",
+            "delivery_qty": "={{ $json.delivery_qty }}",
+            "In Full": "={{ $json['In Full'] }}",
+            "On Time": "={{ $json['On Time'] }}",
+            "On Time In Full": "={{ $json['On Time In Full'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_placement_date",
+              "displayName": "order_placement_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_qty",
+              "displayName": "order_qty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "agreed_delivery_date",
+              "displayName": "agreed_delivery_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "actual_delivery_date",
+              "displayName": "actual_delivery_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "delivery_qty",
+              "displayName": "delivery_qty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "In Full",
+              "displayName": "In Full",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "On Time",
+              "displayName": "On Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "On Time In Full",
+              "displayName": "On Time In Full",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        496,
+        240
+      ],
+      "id": "",
+      "name": "Insert data to  fact_order_line",
+      "credentials": {
+        "postgres": {
+          "id": "",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_aggregate",
+          "mode": "list",
+          "cachedResultName": "fact_aggregate"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $json.order_id }}",
+            "customer_id": "={{ $json.customer_id }}",
+            "on_time": "={{ $json.on_time }}",
+            "order_placement_date": "={{ $json.order_placement_date.toDateTime(\"dd-MM-yy\") }}\n",
+            "otif": "={{ $json.otif }}",
+            "in_full": "={{ $json.in_full }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_placement_date",
+              "displayName": "order_placement_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "on_time",
+              "displayName": "on_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "in_full",
+              "displayName": "in_full",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "otif",
+              "displayName": "otif",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        624,
+        0
+      ],
+      "id": "",
+      "name": "Insert data to fact_aggregate",
+      "credentials": {
+        "postgres": {
+          "id": "",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "",
+      "name": "Extract from File:Aggregate"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        288,
+        240
+      ],
+      "id": "",
+      "name": "Extract from Order Line"
+    }
+  ],
+  "pinData": {
+    "Extract from Order Line": [
+      {
+        "json": {
+          "order_id": "FJUN61321403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891203",
+          "order_qty": "141",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "141",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530321203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891203",
+          "order_qty": "220",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "220",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531321603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891302",
+          "order_qty": "97",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "97",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61603301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891203",
+          "order_qty": "109",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "109",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531603302",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891302",
+          "order_qty": "85",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "85",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61102203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891203",
+          "order_qty": "109",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "109",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61103501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789103",
+          "product_id": "25891203",
+          "order_qty": "336",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "336",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61121203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891203",
+          "order_qty": "287",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "287",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531703601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891203",
+          "order_qty": "181",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "181",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61202602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891203",
+          "order_qty": "439",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "395",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531202303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891302",
+          "order_qty": "80",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "80",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531521301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891203",
+          "order_qty": "477",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "477",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61521203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891203",
+          "order_qty": "424",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "403",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891203",
+          "order_qty": "122",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "122",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531221203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891203",
+          "order_qty": "159",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "159",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531303301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891203",
+          "order_qty": "384",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "384",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531303302",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891302",
+          "order_qty": "61",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "55",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61303503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891302",
+          "order_qty": "43",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "43",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531522203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891203",
+          "order_qty": "500",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "500",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61522502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891203",
+          "order_qty": "379",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "379",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61403203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891203",
+          "order_qty": "378",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "378",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891203",
+          "order_qty": "152",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "152",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61902203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891203",
+          "order_qty": "171",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "29-05-2025",
+          "delivery_qty": "162",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61622302",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891302",
+          "order_qty": "86",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "86",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531621403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891302",
+          "order_qty": "78",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "78",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531203302",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891302",
+          "order_qty": "22",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "22",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61522601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891302",
+          "order_qty": "46",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "46",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531121303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891302",
+          "order_qty": "45",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "45",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530903402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891302",
+          "order_qty": "82",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "74",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891301",
+          "order_qty": "89",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "85",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530703602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891301",
+          "order_qty": "78",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "04-06-2025",
+          "delivery_qty": "78",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531102503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891301",
+          "order_qty": "38",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "36",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61621602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891602",
+          "order_qty": "75",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "67",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530703602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891102",
+          "order_qty": "302",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "302",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530702401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891102",
+          "order_qty": "355",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "319",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61621602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891102",
+          "order_qty": "448",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "448",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530603102",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891102",
+          "order_qty": "437",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "437",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530203102",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891102",
+          "order_qty": "480",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "432",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530102502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891502",
+          "order_qty": "230",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "230",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531102503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891502",
+          "order_qty": "193",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "183",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531122502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891502",
+          "order_qty": "233",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "233",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61203502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891502",
+          "order_qty": "222",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "222",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530903502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891502",
+          "order_qty": "161",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "129",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531903502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891502",
+          "order_qty": "198",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "198",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61903502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891502",
+          "order_qty": "204",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "163",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530603503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891502",
+          "order_qty": "108",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "86",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891502",
+          "order_qty": "185",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "29-05-2025",
+          "delivery_qty": "185",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891502",
+          "order_qty": "203",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "203",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530703602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891502",
+          "order_qty": "242",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "242",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891502",
+          "order_qty": "153",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "153",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891502",
+          "order_qty": "214",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "171",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891502",
+          "order_qty": "184",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "175",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531403603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891502",
+          "order_qty": "179",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "179",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530221502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891502",
+          "order_qty": "207",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "207",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891502",
+          "order_qty": "249",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "249",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531421502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891502",
+          "order_qty": "201",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "181",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61522502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891502",
+          "order_qty": "189",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "29-05-2025",
+          "delivery_qty": "189",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531621403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891403",
+          "order_qty": "455",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "455",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61321403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891403",
+          "order_qty": "474",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "474",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531902403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891403",
+          "order_qty": "495",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "445",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891403",
+          "order_qty": "418",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "397",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530521403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891403",
+          "order_qty": "425",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "425",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530522403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891403",
+          "order_qty": "358",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "358",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891403",
+          "order_qty": "271",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "271",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891503",
+          "order_qty": "213",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "213",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530121602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891503",
+          "order_qty": "241",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "229",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531403603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891503",
+          "order_qty": "179",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "170",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531503503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891503",
+          "order_qty": "120",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "108",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531521503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891503",
+          "order_qty": "122",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "122",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531221503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891503",
+          "order_qty": "165",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "165",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531703601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891503",
+          "order_qty": "236",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "236",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530603503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891503",
+          "order_qty": "187",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "187",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531102503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891503",
+          "order_qty": "240",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "240",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61721503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891503",
+          "order_qty": "111",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "111",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61303503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891503",
+          "order_qty": "127",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "127",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531903303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891103",
+          "order_qty": "468",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "468",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61703103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891103",
+          "order_qty": "413",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "413",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61521103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891103",
+          "order_qty": "323",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "258",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531221503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891103",
+          "order_qty": "492",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "492",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531103103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789103",
+          "product_id": "25891103",
+          "order_qty": "451",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "451",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530102502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891103",
+          "order_qty": "386",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "347",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531202303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891103",
+          "order_qty": "308",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "308",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61202103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891103",
+          "order_qty": "479",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "431",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531422103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891103",
+          "order_qty": "368",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "368",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61422103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891103",
+          "order_qty": "324",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "324",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531703601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891601",
+          "order_qty": "162",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "154",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61522601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891601",
+          "order_qty": "90",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "90",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61702601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891601",
+          "order_qty": "97",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "87",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530121601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891601",
+          "order_qty": "114",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "114",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61103501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789103",
+          "product_id": "25891402",
+          "order_qty": "320",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "288",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530303402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891402",
+          "order_qty": "428",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "29-05-2025",
+          "delivery_qty": "428",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61603402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891402",
+          "order_qty": "431",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "409",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531703601",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891402",
+          "order_qty": "297",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "267",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531503503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891402",
+          "order_qty": "267",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "267",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530422402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891402",
+          "order_qty": "308",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "308",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891402",
+          "order_qty": "337",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "337",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530403402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891402",
+          "order_qty": "500",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "500",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531521402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891402",
+          "order_qty": "486",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "486",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530903402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891402",
+          "order_qty": "303",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "242",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61122402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891402",
+          "order_qty": "245",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "196",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891402",
+          "order_qty": "416",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "333",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891402",
+          "order_qty": "206",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "196",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891402",
+          "order_qty": "300",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "285",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61603301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891201",
+          "order_qty": "480",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "432",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61402401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891201",
+          "order_qty": "128",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "128",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61422301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891201",
+          "order_qty": "493",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "493",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891201",
+          "order_qty": "183",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "183",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530703602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891201",
+          "order_qty": "144",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "144",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891201",
+          "order_qty": "403",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "403",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530203201",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891201",
+          "order_qty": "436",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "436",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61522201",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891201",
+          "order_qty": "252",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "202",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530422501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891501",
+          "order_qty": "125",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "125",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531503503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891501",
+          "order_qty": "140",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "133",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530203501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891501",
+          "order_qty": "247",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "247",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61403501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891501",
+          "order_qty": "138",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "138",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61121501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891501",
+          "order_qty": "121",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "121",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61122501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891501",
+          "order_qty": "185",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "176",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61103501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789103",
+          "product_id": "25891501",
+          "order_qty": "149",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "142",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61303503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891501",
+          "order_qty": "210",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "210",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61421501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891501",
+          "order_qty": "110",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "110",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530202501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891501",
+          "order_qty": "202",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "202",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891501",
+          "order_qty": "164",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "04-06-2025",
+          "delivery_qty": "164",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531622501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891501",
+          "order_qty": "121",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "115",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891602",
+          "order_qty": "191",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "191",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891602",
+          "order_qty": "92",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "92",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61202602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891602",
+          "order_qty": "143",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "136",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530102602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891602",
+          "order_qty": "148",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "148",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530703602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891602",
+          "order_qty": "181",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "181",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531321603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891602",
+          "order_qty": "57",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "57",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61402602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891602",
+          "order_qty": "120",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "120",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530121602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891602",
+          "order_qty": "154",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "146",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530522602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891602",
+          "order_qty": "189",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "170",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891602",
+          "order_qty": "154",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "154",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531902602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891602",
+          "order_qty": "91",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "91",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531603602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891602",
+          "order_qty": "83",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "75",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61122602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891602",
+          "order_qty": "60",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "54",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531703101",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789703",
+          "product_id": "25891101",
+          "order_qty": "317",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "317",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531203301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891101",
+          "order_qty": "392",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "392",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61902203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891101",
+          "order_qty": "443",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "443",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530702401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891101",
+          "order_qty": "359",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "323",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891101",
+          "order_qty": "411",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "370",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530103101",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789103",
+          "product_id": "25891101",
+          "order_qty": "370",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "333",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531421101",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891101",
+          "order_qty": "300",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "285",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530202202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891101",
+          "order_qty": "392",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "392",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61202602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891101",
+          "order_qty": "466",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "466",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530403402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891101",
+          "order_qty": "496",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "29-05-2025",
+          "delivery_qty": "496",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891101",
+          "order_qty": "403",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "403",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531422103",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891101",
+          "order_qty": "495",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "495",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61422101",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891101",
+          "order_qty": "369",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "369",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531402202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891101",
+          "order_qty": "365",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "365",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531603603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891401",
+          "order_qty": "232",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "232",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891401",
+          "order_qty": "388",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "388",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61402401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891401",
+          "order_qty": "229",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "206",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891401",
+          "order_qty": "471",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "471",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530121401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891401",
+          "order_qty": "409",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "409",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61903603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891401",
+          "order_qty": "440",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "418",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530702401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891401",
+          "order_qty": "284",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "270",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891401",
+          "order_qty": "381",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "343",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61702401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891401",
+          "order_qty": "457",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "457",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531522401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789522",
+          "product_id": "25891401",
+          "order_qty": "435",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "435",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530422402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891401",
+          "order_qty": "333",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "333",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61422401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891401",
+          "order_qty": "271",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "271",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61421501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891401",
+          "order_qty": "409",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "04-06-2025",
+          "delivery_qty": "368",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530221401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891401",
+          "order_qty": "236",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "212",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891401",
+          "order_qty": "345",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "345",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531603603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891603",
+          "order_qty": "170",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "170",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531403603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891603",
+          "order_qty": "189",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "189",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530622603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891603",
+          "order_qty": "97",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "78",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61421603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891603",
+          "order_qty": "78",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "78",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61903603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891603",
+          "order_qty": "135",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "128",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891603",
+          "order_qty": "192",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "173",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531321603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891603",
+          "order_qty": "104",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "104",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61321603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891603",
+          "order_qty": "69",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "69",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530402202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891202",
+          "order_qty": "394",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "394",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531402202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891202",
+          "order_qty": "199",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "199",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891202",
+          "order_qty": "318",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "318",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530221401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891202",
+          "order_qty": "297",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "297",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891202",
+          "order_qty": "206",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "206",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531903303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891202",
+          "order_qty": "303",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "288",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530403402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891202",
+          "order_qty": "200",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "200",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61403301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891202",
+          "order_qty": "452",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "452",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531721502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891202",
+          "order_qty": "430",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "430",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530421202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891202",
+          "order_qty": "133",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "120",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531421502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891202",
+          "order_qty": "118",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "112",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530603503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891202",
+          "order_qty": "335",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "335",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530621202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891202",
+          "order_qty": "446",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "424",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531621403",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789621",
+          "product_id": "25891202",
+          "order_qty": "124",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "124",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530202202",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891202",
+          "order_qty": "164",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "164",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531202303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891202",
+          "order_qty": "222",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "222",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530121401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891202",
+          "order_qty": "210",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "210",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61721503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789721",
+          "product_id": "25891303",
+          "order_qty": "80",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "80",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531102303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789102",
+          "product_id": "25891303",
+          "order_qty": "99",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "99",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530421303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789421",
+          "product_id": "25891303",
+          "order_qty": "93",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "84",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530122303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891303",
+          "order_qty": "97",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "78",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61122303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789122",
+          "product_id": "25891303",
+          "order_qty": "73",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "66",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221502",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891303",
+          "order_qty": "57",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "57",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531202303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891303",
+          "order_qty": "41",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "41",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530403303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891303",
+          "order_qty": "61",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "55",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530902603",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891303",
+          "order_qty": "87",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "83",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531121303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891303",
+          "order_qty": "58",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "58",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531903303",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891303",
+          "order_qty": "95",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "76",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530321301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891301",
+          "order_qty": "75",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "75",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531203301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789203",
+          "product_id": "25891301",
+          "order_qty": "88",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "88",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530521301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891301",
+          "order_qty": "58",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "58",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531521301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891301",
+          "order_qty": "54",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "54",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61521301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789521",
+          "product_id": "25891301",
+          "order_qty": "78",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "78",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61221401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789221",
+          "product_id": "25891301",
+          "order_qty": "25",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "25",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531202301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789202",
+          "product_id": "25891301",
+          "order_qty": "36",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "36",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530903402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789903",
+          "product_id": "25891301",
+          "order_qty": "37",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "35",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530702401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891301",
+          "order_qty": "49",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "47",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531702402",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789702",
+          "product_id": "25891301",
+          "order_qty": "49",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "39",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531622501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891301",
+          "order_qty": "38",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "38",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531303301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891301",
+          "order_qty": "91",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "91",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61403301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789403",
+          "product_id": "25891301",
+          "order_qty": "45",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "36",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530422501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891301",
+          "order_qty": "40",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "40",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61422301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789422",
+          "product_id": "25891301",
+          "order_qty": "85",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "85",
+          "In Full": "1",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531603302",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891301",
+          "order_qty": "34",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "34",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61603301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789603",
+          "product_id": "25891301",
+          "order_qty": "56",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "56",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531303301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789303",
+          "product_id": "25891102",
+          "order_qty": "471",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "471",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61402401",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789402",
+          "product_id": "25891102",
+          "order_qty": "402",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "01-06-2025",
+          "delivery_qty": "402",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61622102",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789622",
+          "product_id": "25891102",
+          "order_qty": "439",
+          "agreed_delivery_date": "30-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "439",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61121501",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789121",
+          "product_id": "25891102",
+          "order_qty": "493",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "03-06-2025",
+          "delivery_qty": "468",
+          "In Full": "0",
+          "On Time": "0",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FJUN61902203",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789902",
+          "product_id": "25891102",
+          "order_qty": "321",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "321",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530503602",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891102",
+          "order_qty": "311",
+          "agreed_delivery_date": "01-06-2025",
+          "actual_delivery_date": "02-06-2025",
+          "delivery_qty": "311",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY531503503",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789503",
+          "product_id": "25891102",
+          "order_qty": "487",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "31-05-2025",
+          "delivery_qty": "463",
+          "In Full": "0",
+          "On Time": "1",
+          "On Time In Full": "0"
+        }
+      },
+      {
+        "json": {
+          "order_id": "FMY530321301",
+          "order_placement_date": "17-05-2025",
+          "customer_id": "789321",
+          "product_id": "25891102",
+          "order_qty": "337",
+          "agreed_delivery_date": "31-05-2025",
+          "actual_delivery_date": "30-05-2025",
+          "delivery_qty": "337",
+          "In Full": "1",
+          "On Time": "1",
+          "On Time In Full": "1"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract from File:Aggregate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from Order Line",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File:Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Insert data to fact_aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from Order Line": {
+      "main": [
+        [
+          {
+            "node": "Insert data to  fact_order_line",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "id": "",
+  "tags": []
+}
